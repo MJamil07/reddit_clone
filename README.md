@@ -1,5 +1,6 @@
 # reddit_clone
 
+-  Below Information is Basic Endpoint Details and more features are updated upcoming commits...
 
 ### 1. Authenticator 
 
