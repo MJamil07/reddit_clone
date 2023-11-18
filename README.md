@@ -1,4 +1,4 @@
-# reddit_cloone
+# reddit_clone
 
 
 ### 1. Authenticator 
