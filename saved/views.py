@@ -61,4 +61,4 @@ class ListSaved(generics.ListAPIView):
       
 
       def get_queryset(self):
-            return Saved.objects.filter(user = self.request.user.id)
+            return Saved.objects.filter(user = self.request.user.id).order_by('-created_at')

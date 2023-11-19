@@ -8,6 +8,7 @@ class Saved(models.Model):
       comment = models.ForeignKey(Comment , on_delete=models.CASCADE , blank=True , null=True)
       post = models.ForeignKey(Post , on_delete=models.CASCADE , null=True , blank=True)
       user = models.ForeignKey(User , on_delete=models.CASCADE)
+      created_at = models.DateTimeField(auto_now_add=True)
       
       def __str__(self):
             message = f"{self.user.username} is saved "
