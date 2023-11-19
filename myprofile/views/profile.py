@@ -60,16 +60,17 @@ def retrieve_profile(request : HttpRequest , userId : int ,  *args , **kwargs):
             profile['user'] = user_info
             
             # * Retrieve the user followers
-            followers = Connect.objects.filter(following_user = userId)
+            followers = Connect.objects.filter(following_user = user.user)
+            print(followers)
             followers_info = FollowersSerializer(followers , many = True).data
             profile['followers'] = followers_info
             
             # * Retrieve the user post
-            posts = ListPostSerializer(Post.objects.filter(author=userId) , many = True).data
+            posts = ListPostSerializer(Post.objects.filter(author=user.user) , many = True).data
             profile['posts'] = posts
             
             # * Retrieve the user comments
-            comments = ListCommentSerializer(Comment.objects.filter(user=userId) , many = True).data
+            comments = ListCommentSerializer(Comment.objects.filter(user=user.user) , many = True).data
             profile['comments'] = comments
             
             return Response(profile , status=status.HTTP_200_OK)

@@ -22,7 +22,7 @@ class ListPostSerializer(serializers.ModelSerializer):
             return DownVote.objects.filter(post = post.id).count()
       
       def get_comment(self , post):
-            return ListCommentSerializer( Comment.objects.filter(post=post.id).order_by('-create_at') , many = True).data
+            return ListCommentSerializer( Comment.objects.filter(post=post.id).order_by('-created_at') , many = True).data
 
 class PostSerializer(serializers.ModelSerializer):
       
