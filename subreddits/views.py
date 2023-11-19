@@ -192,4 +192,6 @@ def search_subreddits(request, *args, **kwargs):
 
 
 
-            
+# * Update Subredit only allowed for admin
+
+# * Retrive Subreddits view subreddit info post , memebrrs count

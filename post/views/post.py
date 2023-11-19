@@ -90,3 +90,9 @@ def list_post(request , *args , **kwargs):
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+class RetrivePost(generics.RetrieveAPIView):
+      
+      serializer_class = ListPostSerializer
+      permission_classes = [IsAuthenticated]
+      authentication_classes = [TokenAuthentication]
+      queryset = Post.objects.all()

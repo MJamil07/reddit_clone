@@ -9,6 +9,7 @@ urlpatterns = [
       path('create_post/' , post.CreatePost.as_view() , name = 'create_post'),
       path('delete_post/<int:pk>/' , post.DeletePost.as_view() , name = 'delete_post'),
       path('list_post/' , post.list_post , name = 'list_post'),
+      path('get/<int:pk>/' , post.RetrivePost.as_view() , name = 'Get Post') ,
       
       # * upvote endpoint
       path('create_upvote/' , upvote.CreateUpVote.as_view() , name = 'create_upvote'),
