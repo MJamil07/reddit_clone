@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view , authentication_classes , permis
 from comments.models import Comment
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-from comments.serializers import CommentSerializer
+from comments.serializers import CommentSerializer , ListCommentSerializer
 from post.models import Post
 from rest_framework import generics
 
@@ -101,3 +101,9 @@ def downvote(request , *args , **kwargs):
           
 
 
+class RetriveComment(generics.RetrieveAPIView):
+      
+      serializer_class = ListCommentSerializer
+      permission_classes = [IsAuthenticated]
+      authentication_classes = [TokenAuthentication]
+      queryset = Comment.objects.all()

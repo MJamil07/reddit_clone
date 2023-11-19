@@ -7,5 +7,6 @@ urlpatterns = [
       path('update/<int:pk>/' , views.UpdateComment.as_view() , name = 'update comments'),
       path('upvote/' , views.upvote , name = 'upvote comments'),
       path('downvote/' , views.downvote , name = 'downvote comments'),
+      path('get/<int:pk>/' , views.RetriveComment.as_view() , name = 'Get Comments'),
       
 ]
