@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view , permission_classes , authentica
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
-from subreddits.serializers import SubredditSerializer
+from subreddits.serializers import SubredditSerializer , EditSubredditSerializer
 from subreddits.models import Subreddit
 from rest_framework.response import Response
 from rest_framework import status
@@ -192,6 +192,26 @@ def search_subreddits(request, *args, **kwargs):
 
 
 
-# * Update Subredit only allowed for admin
+class EditSubreddit(generics.UpdateAPIView):
+      """ Edit Subreddit Info only allowed for admin """
+      serializer_class = EditSubredditSerializer
+      permission_classes = [IsAuthenticated]
+      authentication_classes = [TokenAuthentication]
+      
+      """ Get Only Subreddits for authenticated user if admin """
+      def get_queryset(self):
+            return Subreddit.objects.filter(admin = self.request.user.id)
+      
+      def update(self , request , pk):
+            try:
+                  subreddit_instance = self.get_object()
+                  subreddit_serializer = self.get_serializer(subreddit_instance , data = request.data , partial = True)
+                  subreddit_serializer.is_valid(raise_exception=True)
+                  subreddit_serializer.save()
+                  
+                  return Response(subreddit_serializer.data , status=status.HTTP_200_OK)
+                  
+            except Exception as e:
+                  return Response({'error' : str(e)} , status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-# * Retrive Subreddits view subreddit info post , memebrrs count
+# * Retrive Subreddits view subreddit info post , members count ( *Pending )

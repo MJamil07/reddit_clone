@@ -11,5 +11,6 @@ urlpatterns = [
       path('list/' , views.ListSubreddits.as_view() , name = 'list_subreddits'),
       path('get_members/<int:subreddit_id>/' , views.get_community_members , name = 'get_community_members'),
       path('search/' , views.search_subreddits , name = 'search subreddits'),
+      path('edit/<int:pk>/' , views.EditSubreddit.as_view() , name = 'Edit Subreddit'),
 ]
 

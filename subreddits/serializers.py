@@ -10,3 +10,8 @@ class SubredditSerializer(serializers.ModelSerializer):
             model = Subreddit
             exclude = ['admin']
 
+class EditSubredditSerializer(serializers.ModelSerializer):
+      
+      class Meta:
+            model = Subreddit
+            exclude = ('created_at' , 'admin' , 'members')
