@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view , permission_classes , authentica
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
-from subreddits.serializers import SubredditSerializer , EditSubredditSerializer
+from subreddits.serializers import SubredditSerializer , EditSubredditSerializer , ListSubredditSerializer
 from subreddits.models import Subreddit
 from rest_framework.response import Response
 from rest_framework import status
@@ -12,6 +12,7 @@ from post.serializers.post import ListPostSerializer
 from myprofile.serializers.connect import UserSerializer
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
+from django.http import HttpRequest
 
 class CreateSubreddit(generics.CreateAPIView):
       """ create community for user """
@@ -209,9 +210,44 @@ class EditSubreddit(generics.UpdateAPIView):
                   subreddit_serializer.is_valid(raise_exception=True)
                   subreddit_serializer.save()
                   
+                  
+                  
                   return Response(subreddit_serializer.data , status=status.HTTP_200_OK)
                   
             except Exception as e:
                   return Response({'error' : str(e)} , status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-# * Retrive Subreddits view subreddit info post , members count ( *Pending )
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@authentication_classes([TokenAuthentication])
+def retrieve_community(request, subredditId, *args, **kwargs): 
+      """ Retrieve subreddit details, member count, and posts """
+      try:
+            subreddit = {}
+            
+            # * Get the subreddit instance
+            subreddit_instance = get_object_or_404(Subreddit, id=subredditId)
+      
+            # * Check if the subreddit is private and the authenticated user is not a member
+            if subreddit_instance.subreddit_type == 'private' and not subreddit_instance.members.filter(id=request.user.id).exists():
+                  return Response({'error': 'You are not a member of this group'}, status=status.HTTP_401_UNAUTHORIZED)
+            
+            # * Serialize subreddit details
+            subreddit['subreddit'] = ListSubredditSerializer(subreddit_instance).data
+            
+            # * Get member count
+            subreddit['members'] = subreddit_instance.members.count()
+            
+            # * Get posts related to the subreddit
+            subreddit['posts'] = ListPostSerializer(Post.objects.filter(subreddit=subreddit_instance), many=True).data
+            
+            return Response(subreddit, status=status.HTTP_200_OK)
+            
+      except Subreddit.DoesNotExist:
+            return Response({'error': 'Subreddit not found'}, status=status.HTTP_404_NOT_FOUND)
+            
+      except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
