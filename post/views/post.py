@@ -9,6 +9,7 @@ from subreddits.models import Subreddit
 from myprofile.models import Connect
 from rest_framework.response import Response
 from rest_framework import status
+from history.models import History
 
 # * The CreatePost class is a generic view that allows for the creation of a new post.
 class CreatePost(generics.CreateAPIView):
@@ -91,8 +92,16 @@ def list_post(request , *args , **kwargs):
 
 
 class RetrivePost(generics.RetrieveAPIView):
-      
+      """ all users allowed to retrieve all post """
       serializer_class = ListPostSerializer
       permission_classes = [IsAuthenticated]
       authentication_classes = [TokenAuthentication]
       queryset = Post.objects.all()
+      
+      def get(self , request , *args , **kwargs ):
+            instance = self.get_object()
+            # * create history when user is view the post 
+            History.objects.create(user=request.user , post = instance , reason='view post')
+            return super().get(request , *args , **kwargs) 
+      
+      

@@ -7,7 +7,8 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
-
+from history.models import History
+from django.shortcuts import get_object_or_404
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -16,7 +17,8 @@ def create_downvote(request):
     try:
         # * Get post id from request data
         post_id = request.data.get('post', None)
-        print(request.user.pk)
+        
+        post = get_object_or_404(Post , id = post_id)
 
         # * Check if the user has already upvoted  the post
         existing_vote = UpVote.objects.filter(upvoter=request.user, post=post_id).first()
@@ -27,6 +29,8 @@ def create_downvote(request):
         serializer = DownVoteSerializer(data={'downvoter': request.user.pk, 'post': post_id})
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        
+        History.objects.create(user=request.user , post = post , reason='downvote post')
 
         return Response({"detail": "Downvote created successfully."}, status=status.HTTP_201_CREATED)
 
