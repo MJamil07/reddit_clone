@@ -38,6 +38,7 @@ def create_comment(request , *args , **kwargs):
             if serializer.is_valid():
                   # * create comment and save
                   serializer.save(user=request.user, post=post, parent_comment=parent_comment)
+                  History.objects.create(user=request.user , comment=serializer.instance , reason='comment post')
                   return Response(serializer.data, status=status.HTTP_201_CREATED)
             
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
