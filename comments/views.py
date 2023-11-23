@@ -78,7 +78,7 @@ def upvote(request , *args , **kwargs):
             comment = get_object_or_404(Comment , id = comment_id)
             comment.upvote(request.user)
             
-            History.objects.create(user=request.user , comment = comment , reason= 'upvote post')
+            History.objects.create(user=request.user , comment = comment , reason= 'upvote comment')
             
             return Response({'message' : 'Upvoted'} , status=status.HTTP_200_OK)
             
@@ -99,6 +99,9 @@ def downvote(request , *args , **kwargs):
             
             comment = get_object_or_404(Comment , id = comment_id)
             comment.downvote(request.user)
+            
+            History.objects.create(user=request.user , comment = comment , reason= 'downvote comment')
+            
             return Response({'message' : 'Down voted'} , status=status.HTTP_200_OK)
             
       except Exception as e:
