@@ -115,3 +115,8 @@ class RetriveComment(generics.RetrieveAPIView):
       permission_classes = [IsAuthenticated]
       authentication_classes = [TokenAuthentication]
       queryset = Comment.objects.all()
+      
+      def get(self , request , *args , **kwargs):
+            comment = self.get_object()
+            History.objects.create(user=request.user , comment = comment , reason = 'view comment')
+            return super().get(request , *args , **kwargs)
