@@ -9,6 +9,8 @@ from rest_framework.permissions import IsAuthenticated
 from comments.serializers import CommentSerializer , ListCommentSerializer
 from post.models import Post
 from rest_framework import generics
+from history.models import History
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -75,6 +77,9 @@ def upvote(request , *args , **kwargs):
             
             comment = get_object_or_404(Comment , id = comment_id)
             comment.upvote(request.user)
+            
+            History.objects.create(user=request.user , comment = comment , reason= 'upvote post')
+            
             return Response({'message' : 'Upvoted'} , status=status.HTTP_200_OK)
             
       except Exception as e:
