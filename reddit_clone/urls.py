@@ -25,6 +25,8 @@ urlpatterns = [
     path('api/v1/subreddit/', include('subreddits.urls')),
     path('api/v1/comment/', include('comments.urls')),
     path('api/v1/saved/', include('saved.urls')),
+    path('api/v1/history/', include('history.urls')),
+    
     
     
     

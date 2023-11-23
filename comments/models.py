@@ -16,7 +16,7 @@ class Comment(models.Model):
     
     
     def __str__(self):
-        return f"Comment by {self.user.username} for {self.post}"
+        return f"Comment by {self.user.username} for {self.post} in {self.content}"
 
     def upvote(self, user):
         self.upvotes.add(user)
